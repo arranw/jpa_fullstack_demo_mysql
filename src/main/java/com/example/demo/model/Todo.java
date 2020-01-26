@@ -12,6 +12,8 @@ public class Todo {
     private String title;
     private String content;
 
+
+
     @Id
     @GeneratedValue
     public Long getId() {

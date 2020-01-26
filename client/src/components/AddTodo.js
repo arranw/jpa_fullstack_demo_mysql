@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import styled from "styled-components";
-import axios from "axios";
+import {addTodo} from "../actions/todos";
+import {connect} from "react-redux";
 
 const AddTodoDiv = styled.div`
     width: 50%;
@@ -11,7 +12,7 @@ const AddTodoDiv = styled.div`
     padding: 0.75rem;
 `
 
-function AddTodo({todos, setTodos}) {
+function AddTodo({addTodo}) {
     const [todo, setTodo] = useState({
         title: "",
         content: ""
@@ -19,16 +20,7 @@ function AddTodo({todos, setTodos}) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const config = {
-            headers: {
-                "Content-Type": "Application/json"
-            }
-        };
-        const data = todo;
-        const res = await axios.post("/todos/insert", data, config);
-        console.log(res.data)
-
-        setTodos([...todos, res.data]);
+        addTodo(todo);
     }
 
     const onChangeHandler = (e) => setTodo({...todo, [e.target.name]: e.target.value});
@@ -44,4 +36,4 @@ function AddTodo({todos, setTodos}) {
     );
 }
 
-export default AddTodo;
+export default connect(null, {addTodo})(AddTodo);

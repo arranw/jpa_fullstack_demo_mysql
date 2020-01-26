@@ -1,6 +1,7 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import styled from "styled-components";
-import axios from "axios";
+import {connect} from "react-redux";
+import {getTodos, deleteTodo} from "../actions/todos"
 
 const TodoListDiv = styled.div`
     width: 50%;
@@ -25,21 +26,17 @@ const DeleteButton = styled.i`
     pointer: cursor;
 `
 
-function TodoList({todos, setTodos}) {
+function TodoList({getTodos, deleteTodo, todos}) {
 
     useEffect(() => {
-        async function fetch() {
-            const res = await axios.get("/todos/all");
-            setTodos(res.data);
-        }
-        fetch();
-    }, []);
+        getTodos()
+    }, [getTodos]);
 
 
-    const handleDelete = async (id) => {
-        const res = await axios.delete(`/todos/delete/${id}`);
-        setTodos(res.data);
+    const handleDelete = (id) => {
+        deleteTodo(id);
     }
+    console.log(todos)
 
     if (!todos) return <h1>No Todos</h1>
 
@@ -58,4 +55,9 @@ function TodoList({todos, setTodos}) {
     );
 }
 
-export default TodoList;
+const mapStateToProps = (state) => ({
+    todos: state.todos.todos
+})
+
+
+export default connect(mapStateToProps, {getTodos, deleteTodo})(TodoList);
